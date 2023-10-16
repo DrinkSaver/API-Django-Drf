@@ -1,15 +1,41 @@
-from rest_framework import viewsets, permissions
-from ApiDrinkSaver.models.product import Product
-from ApiDrinkSaver.serializers.product_serializer import ProductSerializer
+from rest_framework import generics
+from ApiDrinkSaver.models.product import Product, Bar, BarProductPrice
+from ApiDrinkSaver.serializers.product_serializer import ProductSerializer, BarSerializer, BarProductPriceSerializer
+from ApiDrinkSaver.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly, IsLambdaOrReadOnly, IsLambdaCanModifyPrice, \
+    IsOwnerCanModifyBar
 
-class ProductViewSet(viewsets.ModelViewSet):
+
+class ProductList(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
-    def get_permissions(self):
-        if self.request.user.user_type == 'admin':
-            # Les administrateurs ont toutes les autorisations
-            return [permissions.AllowAny()]
-        elif self.request.user.user_type in ['lambda', 'owner']:
-            # Les utilisateurs lambda et propriétaires ont la permission de lecture uniquement
-            return [permissions.IsAuthenticated(), permissions.ReadOnly]
+
+class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class BarList(generics.ListCreateAPIView):
+    queryset = Bar.objects.all()
+    serializer_class = BarSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class BarDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Bar.objects.all()
+    serializer_class = BarSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+
+class BarProductPriceList(generics.ListCreateAPIView):
+    queryset = BarProductPrice.objects.all()
+    serializer_class = BarProductPriceSerializer
+    permission_classes = [IsLambdaOrReadOnly]
+
+
+class BarProductPriceDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = BarProductPrice.objects.all()
+    serializer_class = BarProductPriceSerializer
+    permission_classes = [IsLambdaCanModifyPrice, IsOwnerOrReadOnly]

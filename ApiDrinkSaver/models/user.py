@@ -27,7 +27,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('lambda', 'Lambda'),
         ('owner', 'Owner'),
     )
-
+    username = models.CharField(max_length=30, unique=True, default='', blank=True)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, null=True, blank=True)
     last_name = models.CharField(max_length=30, null=True, blank=True)
@@ -50,6 +50,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
+    USERNAME_FIELDS = ['email', 'username']
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):

@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
 from decouple import config, Csv
 from datetime import timedelta
+from config import certificates
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,6 +76,9 @@ DATABASES = {
         "PASSWORD": config('DB_PASSWORD'),
         "HOST": config('DB_HOST'),
         "PORT": config('DB_PORT'),
+        "TEST": {
+            'NAME': 'myproject_test',
+        }
     }
 }
 
@@ -144,11 +149,12 @@ SIMPLE_JWT = {
 
 # Paramètres de messagerie pour l'envoi d'e-mails sortants
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Backend d'e-mail SMTP
-EMAIL_HOST = 'votre_serveur_smtp.com'  # L'adresse de votre serveur SMTP
+EMAIL_HOST = 'smtp.gmail.com'  # L'adresse de votre serveur SMTP
 EMAIL_PORT = 587  # Port SMTP (587 est courant pour TLS, utilisez 465 pour SSL)
 EMAIL_USE_TLS = True  # Utiliser TLS (si False, utilisez EMAIL_USE_SSL)
 EMAIL_USE_SSL = False  # Utiliser SSL (si True, utilisez 465 pour EMAIL_PORT)
-EMAIL_HOST_USER = 'votre_adresse_email@gmail.com'  # Votre adresse e-mail d'envoi
-EMAIL_HOST_PASSWORD = 'votre_mot_de_passe'  # Mot de passe de votre adresse e-mail d'envoi
-EMAIL_FROM = 'votre_adresse_email@gmail.com'  # Adresse de l'expéditeur par défaut
-DEFAULT_FROM_EMAIL = 'votre_adresse_email@gmail.com'  # Adresse de l'expéditeur par défaut
+EMAIL_SSL_CAFILE = False #os.path.join(BASE_DIR, 'ApiDrinkSaver.config.certificates', 'cacert.pem')
+EMAIL_HOST_USER = 'zychsteeve4@gmail.com'  # Votre adresse e-mail d'envoi
+EMAIL_HOST_PASSWORD = 'ldytzdhmvunjbvoo'  # Mot de passe de votre adresse e-mail d'envoi
+EMAIL_FROM = 'zychsteeve4@gmail.com'  # Adresse de l'expéditeur par défaut
+DEFAULT_FROM_EMAIL = 'zychsteeve4@gmail.com'  # Adresse de l'expéditeur par défaut

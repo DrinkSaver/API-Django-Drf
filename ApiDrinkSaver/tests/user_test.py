@@ -1,7 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from ApiDrinkSaver.views.user_view import UserRegistrationView, UserLoginView, UserProfileView ,PasswordResetView, PasswordResetConfirmView
+from ApiDrinkSaver.views.user_view import (UserRegistrationView, UserLoginView, UserProfileView ,PasswordResetView,
+                                           PasswordResetConfirmView)
 
 
 class UserRegistrationTest(APITestCase):
