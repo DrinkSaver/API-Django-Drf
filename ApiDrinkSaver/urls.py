@@ -7,6 +7,7 @@ from ApiDrinkSaver.tests.user_test import (UserRegistrationTest, UserLoginTest, 
 
 from ApiDrinkSaver.views.product_view import (ProductList, ProductDetail, BarList, BarDetail, BarProductPriceList,
                                               BarProductPriceDetail)
+
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
     path('login/', UserLoginView.as_view(), name='user-login'),

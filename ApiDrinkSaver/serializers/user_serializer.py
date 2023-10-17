@@ -1,23 +1,24 @@
 from rest_framework import serializers
-from ApiDrinkSaver.models.user import CustomUser
+from ApiDrinkSaver.models.user import User
 from rest_framework_jwt.settings import api_settings
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ('id', 'email', 'first_name', 'last_name', 'user_type', 'profile_img', 'banner_img', 'date_of_birth',
-                  'email_confirmed')
+        db_table = 'User'
+        model = User
+        fields = '__all__'
 
 
 class CustomUserCreateSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(write_only=True, required=True)
     password = serializers.CharField(write_only=True)
     token = serializers.SerializerMethodField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
-            'id', 'email', 'first_name', 'last_name', 'user_type', 'profile_img', 'banner_img', 'date_of_birth',
+            'id', 'username', 'email', 'first_name', 'last_name', 'user_type', 'profile_img', 'banner_img', 'date_of_birth',
             'password', 'token')
 
     def create(self, validated_data):

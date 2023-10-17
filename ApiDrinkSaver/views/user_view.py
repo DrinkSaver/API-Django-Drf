@@ -4,8 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from ApiDrinkSaver.models.user import CustomUser
-from ApiDrinkSaver.serializers.user_serializer import CustomUserCreateSerializer, CustomUserSerializer
+from ApiDrinkSaver.models.user import User
+from ApiDrinkSaver.serializers.user_serializer import CustomUserCreateSerializer, UserSerializer
 
 
 class UserRegistrationView(APIView):
@@ -13,7 +13,7 @@ class UserRegistrationView(APIView):
 
     def post(self, request):
         email = request.data.get('email')
-        if CustomUser.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             return Response({'detail': 'Cet e-mail existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = CustomUserCreateSerializer(data=request.data)
@@ -55,7 +55,7 @@ class UserLoginView(TokenObtainPairView):
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
-    serializer_class = CustomUserSerializer
+    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -71,7 +71,7 @@ class PasswordResetView(APIView):
         email = request.data.get('email')
 
         # Vérifier l'existence de l'e-mail dans la base de données
-        user = CustomUser.objects.filter(email=email).first()
+        user = User.objects.filter(email=email).first()
 
         if user:
             # Génération d'un code de réinitialisation (par exemple, un code à 6 chiffres)
@@ -114,7 +114,7 @@ class PasswordResetConfirmView(APIView):
         reset_code = request.data.get('reset_code')
 
         # Vérifier si le code de réinitialisation est valide pour l'utilisateur
-        user = CustomUser.objects.filter(email=email, reset_code=reset_code).first()
+        user = User.objects.filter(email=email, reset_code=reset_code).first()
 
         if user:
             new_password = generate_random_password()

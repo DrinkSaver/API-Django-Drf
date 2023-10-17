@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ApiDrinkSaver.models.product import Product, Bar, BarProductPrice
+from ApiDrinkSaver.models.product_bar import Product, Bar, BarProductPrice
 
 
 class ProductSerializer(serializers.ModelSerializer):

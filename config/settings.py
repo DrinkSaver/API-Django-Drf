@@ -1,7 +1,24 @@
 import os
+import requests
+# response = requests.get('http://localhost:8000/', verify=False)
+# r = requests.get(url=URL, params=PARAMS, verify=False)
+
+# import ssl
+# try:
+#     _create_unverified_https_context = ssl._create_unverified_context
+# except AttributeError:
+# Legacy Python that doesn't verify HTTPS certificates by default
+#     pass
+# else:
+# Handle target environment that doesn't support HTTPS verification
+# ssl._create_default_https_context = _create_unverified_https_context
+# Désactive la vérification SSL
+# ssl._create_default_https_context = ssl._create_unverified_context
+
 from pathlib import Path
 from decouple import config, Csv
 from datetime import timedelta
+
 from config import certificates
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -135,6 +152,7 @@ SWAGGER_SETTINGS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -153,8 +171,8 @@ EMAIL_HOST = 'smtp.gmail.com'  # L'adresse de votre serveur SMTP
 EMAIL_PORT = 587  # Port SMTP (587 est courant pour TLS, utilisez 465 pour SSL)
 EMAIL_USE_TLS = True  # Utiliser TLS (si False, utilisez EMAIL_USE_SSL)
 EMAIL_USE_SSL = False  # Utiliser SSL (si True, utilisez 465 pour EMAIL_PORT)
-EMAIL_SSL_CAFILE = False #os.path.join(BASE_DIR, 'ApiDrinkSaver.config.certificates', 'cacert.pem')
-EMAIL_HOST_USER = 'zychsteeve4@gmail.com'  # Votre adresse e-mail d'envoi
+# EMAIL_SSL_CAFILE = 'ApiDrinkSaver.config.certificates/cacert.pem'
+EMAIL_HOST_USER = 'randomarre3@gmail.com'  # Votre adresse e-mail d'envoi
 EMAIL_HOST_PASSWORD = 'ldytzdhmvunjbvoo'  # Mot de passe de votre adresse e-mail d'envoi
-EMAIL_FROM = 'zychsteeve4@gmail.com'  # Adresse de l'expéditeur par défaut
-DEFAULT_FROM_EMAIL = 'zychsteeve4@gmail.com'  # Adresse de l'expéditeur par défaut
+EMAIL_FROM = 'randomarre3@gmail.com'  # Adresse de l'expéditeur par défaut
+DEFAULT_FROM_EMAIL = 'randomarre3@gmail.com'  # Adresse de l'expéditeur par défaut

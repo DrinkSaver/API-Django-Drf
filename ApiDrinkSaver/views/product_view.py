@@ -1,5 +1,5 @@
 from rest_framework import generics
-from ApiDrinkSaver.models.product import Product, Bar, BarProductPrice
+from ApiDrinkSaver.models.product_bar import Product, Bar, BarProductPrice
 from ApiDrinkSaver.serializers.product_serializer import ProductSerializer, BarSerializer, BarProductPriceSerializer
 from ApiDrinkSaver.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly, IsLambdaOrReadOnly, IsLambdaCanModifyPrice, \
     IsOwnerCanModifyBar

@@ -1,5 +1,9 @@
+from django.contrib.auth.models import Permission
 from rest_framework import permissions
-from ApiDrinkSaver.models.product import UserModifiedBarPrice
+from django.contrib.contenttypes.models import ContentType
+
+from ApiDrinkSaver.models.user import User
+from ApiDrinkSaver.models.user_detail import UserModifiedBarPrice
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -37,3 +41,15 @@ class IsOwnerCanModifyBar(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.owner == request.user
+
+
+# Vérifier si la permission 'can_manage_bars_products' existe avant de la créer
+admin_content_type = ContentType.objects.get_for_model(User)
+codename = 'can_manage_bars_products'
+
+if not Permission.objects.filter(content_type=admin_content_type, codename=codename).exists():
+    admin_permission = Permission.objects.create(
+        codename=codename,
+        name='Can Manage Bars and Products',
+        content_type=admin_content_type,
+    )
