@@ -1,12 +1,4 @@
 from django.urls import path
-from ApiDrinkSaver.views.user_view import (UserRegistrationView, UserLoginView, PasswordResetView,
-                                           PasswordResetConfirmView)
-
-from ApiDrinkSaver.tests.user_test import (UserRegistrationTest, UserLoginTest, UserDetailsTest, PasswordResetTest,
-                                           PasswordResetConfirmTest)
-
-from ApiDrinkSaver.views.product_view import (ProductList, ProductDetail, BarList, BarDetail, BarProductPriceList,
-                                              BarProductPriceDetail)
 
 urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user-registration'),

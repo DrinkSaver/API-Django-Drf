@@ -1,31 +1,10 @@
 import os
-import requests
-# response = requests.get('http://localhost:8000/', verify=False)
-# r = requests.get(url=URL, params=PARAMS, verify=False)
-
-# import ssl
-# try:
-#     _create_unverified_https_context = ssl._create_unverified_context
-# except AttributeError:
-# Legacy Python that doesn't verify HTTPS certificates by default
-#     pass
-# else:
-# Handle target environment that doesn't support HTTPS verification
-# ssl._create_default_https_context = _create_unverified_https_context
-# Désactive la vérification SSL
-# ssl._create_default_https_context = ssl._create_unverified_context
-
 from pathlib import Path
 from decouple import config, Csv
 from datetime import timedelta
 
-from config import certificates
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Definition of the basic configuration
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
@@ -33,10 +12,10 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
-# Application definition
+ALLOWED_HOSTS = []
 
+# Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -46,10 +25,14 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "drf_yasg",
     "rest_framework",
-    "rest_framework.authtoken",
-    "rest_framework_jwt",
     "ApiDrinkSaver",
-
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.apple",
+    "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.instagram",
+    "allauth.socialaccount.providers.google",
 ]
 
 MIDDLEWARE = [
@@ -60,10 +43,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
 
+# Configuration of templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -80,11 +65,10 @@ TEMPLATES = [
     },
 ]
 
+# WSGI Application Configuration
 WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": 'django.db.backends.mysql',
@@ -99,9 +83,12 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+AUTHENTICATION_BACKENDS = {
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.socialaccount.auth_backends.AuthenticationBackend'
+}
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -118,8 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -129,15 +114,12 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = "/static/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Swagger
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
     "SECURITY_DEFINITIONS": {
@@ -156,23 +138,11 @@ REST_FRAMEWORK = {
     ),
 }
 
-# Configurations spécifiques à djangorestframework simplejwt
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-    'SLIDING_TOKEN_LIFETIME': timedelta(days=7),
-    'SLIDING_TOKEN_LIFETIME_REFRESH_LIFETIME': timedelta(days=14),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=14),
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email'],  # Les permissions requises, vous pouvez ajouter d'autres scopes si nécessaire
+        'FIELDS': ['id', 'email'],  # Les champs à récupérer (id et email sont les plus courants)
+        'VERIFIED_EMAIL': True,  # L'utilisateur doit avoir une adresse e-mail vérifiée
+    }
 }
-
-# Paramètres de messagerie pour l'envoi d'e-mails sortants
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Backend d'e-mail SMTP
-EMAIL_HOST = 'smtp.gmail.com'  # L'adresse de votre serveur SMTP
-EMAIL_PORT = 587  # Port SMTP (587 est courant pour TLS, utilisez 465 pour SSL)
-EMAIL_USE_TLS = True  # Utiliser TLS (si False, utilisez EMAIL_USE_SSL)
-EMAIL_USE_SSL = False  # Utiliser SSL (si True, utilisez 465 pour EMAIL_PORT)
-# EMAIL_SSL_CAFILE = 'ApiDrinkSaver.config.certificates/cacert.pem'
-EMAIL_HOST_USER = 'randomarre3@gmail.com'  # Votre adresse e-mail d'envoi
-EMAIL_HOST_PASSWORD = 'ldytzdhmvunjbvoo'  # Mot de passe de votre adresse e-mail d'envoi
-EMAIL_FROM = 'randomarre3@gmail.com'  # Adresse de l'expéditeur par défaut
-DEFAULT_FROM_EMAIL = 'randomarre3@gmail.com'  # Adresse de l'expéditeur par défaut
