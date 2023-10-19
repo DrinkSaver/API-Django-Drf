@@ -1,0 +1,13 @@
+Subject: Confirmation de votre inscription
+
+Cher(e) {{ user.username }},
+
+Merci de vous être inscrit sur notre application. Avant de commencer à l'utiliser, nous avons besoin de vérifier votre adresse e-mail.
+
+Veuillez cliquer sur le lien ci-dessous pour confirmer votre adresse e-mail :
+{{ protocol }}://{{ domain }}{% url 'account_confirm_email' key %}
+
+Si vous n'avez pas demandé cette inscription, veuillez ignorer cet e-mail.
+
+Cordialement,
+L'équipe de Drink Saver

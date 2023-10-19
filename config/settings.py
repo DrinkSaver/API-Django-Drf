@@ -29,9 +29,9 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    'allauth.socialaccount.providers.email',
     "allauth.socialaccount.providers.apple",
     "allauth.socialaccount.providers.facebook",
-    "allauth.socialaccount.providers.instagram",
     "allauth.socialaccount.providers.google",
 ]
 
@@ -85,8 +85,22 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.socialaccount.auth_backends.AuthenticationBackend'
+    'allauth.socialaccount.auth_backends.AuthenticationBackend',
+    'allauth.socialaccount.providers.facebook.FacebookOAuth2Provider',
+    'allauth.socialaccount.providers.google.GoogleOAuth2Provider',
+    'allauth.socialaccount.providers.apple.AppleProvider',
 }
+
+# Using `allauth' for authentication
+AUTHENTICATION_CLASSES = {
+    'allauth.account.auth_backends.AuthenticationBackend',
+}
+
+# Specific `allauth' configuration for email confirmation
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/account/confirmed-email/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/account/confirmed-email/'
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -139,10 +153,64 @@ REST_FRAMEWORK = {
 }
 
 SOCIALACCOUNT_PROVIDERS = {
+
     'facebook': {
+        'APP': {
+
+        },
         'METHOD': 'oauth2',
         'SCOPE': ['email'],  # Les permissions requises, vous pouvez ajouter d'autres scopes si nécessaire
         'FIELDS': ['id', 'email'],  # Les champs à récupérer (id et email sont les plus courants)
         'VERIFIED_EMAIL': True,  # L'utilisateur doit avoir une adresse e-mail vérifiée
+    },
+
+    'google': {
+        'APP': {
+
+        },
+    },
+
+    'apple': {
+        'APP': {
+
+        },
     }
+
 }
+
+# Email settings for sending outgoing emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')  # L'adresse de votre serveur SMTP
+EMAIL_PORT = 587  # Port SMTP (587 est courant pour TLS, utilisez 465 pour SSL)
+EMAIL_USE_TLS = True  # Utiliser TLS (si False, utilisez EMAIL_USE_SSL)
+EMAIL_USE_SSL = False  # Utiliser SSL (si True, utilisez 465 pour EMAIL_PORT)
+EMAIL_HOST_USER = config('EMAIl')  # Votre adresse e-mail d'envoi
+EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')  # Mot de passe de votre adresse e-mail d'envoi
+EMAIL_FROM = config('EMAIl')  # Adresse de l'expéditeur par défaut
+DEFAULT_FROM_EMAIL = config('EMAIl')  # Adresse de l'expéditeur par défaut
+ACCOUNT_EMAIL_CONFIRMATION_TEMPLATE = 'templates/emails/confirmation_signup_message.txt'
+ACCOUNT_PASSWORD_RESET_CONFIRM = 'templates/emails/password_reset_confirmation.txt'
+
+# Setup for password reset with `allauth'
+ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/account/confirmed-email/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/account/confirmed-email/'
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
+ACCOUNT_USERNAME_MIN_LENGTH = 6
+ACCOUNT_USERNAME_BLACKLIST = []
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+ACCOUNT_SESSION_REMEMBER = None
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1800
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
