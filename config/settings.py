@@ -29,8 +29,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    'allauth.socialaccount.providers.email',
-    "allauth.socialaccount.providers.apple",
+    # 'allauth.socialaccount.providers.email',
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
 ]
@@ -88,19 +87,12 @@ AUTHENTICATION_BACKENDS = {
     'allauth.socialaccount.auth_backends.AuthenticationBackend',
     'allauth.socialaccount.providers.facebook.FacebookOAuth2Provider',
     'allauth.socialaccount.providers.google.GoogleOAuth2Provider',
-    'allauth.socialaccount.providers.apple.AppleProvider',
 }
 
 # Using `allauth' for authentication
-AUTHENTICATION_CLASSES = {
+AUTHENTICATION_CLASSES = [
     'allauth.account.auth_backends.AuthenticationBackend',
-}
-
-# Specific `allauth' configuration for email confirmation
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/account/confirmed-email/'
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/account/confirmed-email/'
-
+]
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -144,38 +136,32 @@ SWAGGER_SETTINGS = {
     "PERSIST_AUTH": True,
 }
 
-# Utilisation de JSON Web Token pour l'authentification
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-}
 
 SOCIALACCOUNT_PROVIDERS = {
 
     'facebook': {
         'APP': {
-
+            'client_id': config('ID_FACEBOOK'),
+            'secret': config('SECRET_FACEBOOK')
         },
         'METHOD': 'oauth2',
-        'SCOPE': ['email'],  # Les permissions requises, vous pouvez ajouter d'autres scopes si nécessaire
-        'FIELDS': ['id', 'email'],  # Les champs à récupérer (id et email sont les plus courants)
-        'VERIFIED_EMAIL': True,  # L'utilisateur doit avoir une adresse e-mail vérifiée
+        'SCOPE': ['email', 'public_profile'],
+        'FIELDS': ['email', 'name', 'firstname', 'lastname'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'VERIFIED_EMAIL': True,
     },
 
     'google': {
         'APP': {
-
+            'client_id': config('ID_GOOGLE'),
+            'secret': config('SECRET_GOOGLE'),
+            'key': '',
         },
+        'SCOPE': ['email', 'profil'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+
     },
-
-    'apple': {
-        'APP': {
-
-        },
-    }
-
 }
 
 # Email settings for sending outgoing emails
