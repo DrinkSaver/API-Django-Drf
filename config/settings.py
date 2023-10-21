@@ -10,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=False,  cast=bool)
 
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "drf_yasg",
     "rest_framework",
     "ApiDrinkSaver",
@@ -33,6 +34,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -82,17 +85,12 @@ DATABASES = {
     }
 }
 
-AUTHENTICATION_BACKENDS = {
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.socialaccount.auth_backends.AuthenticationBackend',
-    'allauth.socialaccount.providers.facebook.FacebookOAuth2Provider',
-    'allauth.socialaccount.providers.google.GoogleOAuth2Provider',
-}
-
-# Using `allauth' for authentication
-AUTHENTICATION_CLASSES = [
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -138,7 +136,6 @@ SWAGGER_SETTINGS = {
 
 
 SOCIALACCOUNT_PROVIDERS = {
-
     'facebook': {
         'APP': {
             'client_id': config('ID_FACEBOOK'),
@@ -146,7 +143,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         'METHOD': 'oauth2',
         'SCOPE': ['email', 'public_profile'],
-        'FIELDS': ['email', 'name', 'firstname', 'lastname'],
+        'FIELDS': ['email', 'name', 'first_name', 'last_name'],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
         'INIT_PARAMS': {'cookie': True},
         'VERIFIED_EMAIL': True,
@@ -156,9 +153,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'APP': {
             'client_id': config('ID_GOOGLE'),
             'secret': config('SECRET_GOOGLE'),
-            'key': '',
         },
-        'SCOPE': ['email', 'profil'],
+        'SCOPE': ['email', 'profile'],
         'AUTH_PARAMS': {'access_type': 'online'},
 
     },

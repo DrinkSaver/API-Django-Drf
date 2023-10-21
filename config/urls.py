@@ -9,10 +9,10 @@ schema_view = get_schema_view(
     openapi.Info(
         title="DrinkSaver API",  # Titre de votre API
         default_version="v1",  # Version par défaut de l'API
-        description="Test description",  # Description de l'API
-        terms_of_service="/",  # Conditions d'utilisation de l'API
-        contact=openapi.Contact(email="/"),  # Contact pour l'API
-        license=openapi.License(name="/"),  # Licence de l'API
+        description="API  for ApiDrinkSaver",  # Description de l'API
+        terms_of_service="https://www.example.com/terms/",  # Conditions d'utilisation de l'API
+        contact=openapi.Contact(email="contact@example.com"),  # Contact pour l'API
+        license=openapi.License(name="Example License"),  # Licence de l'API
     ),
     public=True,  # Autorise l'accès public à la documentation Swagger
     permission_classes=(permissions.AllowAny,),  # Autorise tous les utilisateurs à accéder à la documentation
