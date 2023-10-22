@@ -23,6 +23,7 @@ class CustomUserManager(BaseUserManager):
 # Créez un modèle utilisateur personnalisé en utilisant AbstractBaseUser
 class CustomUser(AbstractBaseUser):
     # Champs de base pour l'authentification
+    username = models.CharField(unique=True, verbose_name="Surnom")
     email = models.EmailField(unique=True, verbose_name="Adresse e-mail")
     password = models.CharField(max_length=128, verbose_name="Mot de passe")
 

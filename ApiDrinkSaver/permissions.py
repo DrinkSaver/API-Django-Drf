@@ -2,8 +2,6 @@ from django.contrib.auth.models import Permission
 from rest_framework import permissions
 from django.contrib.contenttypes.models import ContentType
 
-from ApiDrinkSaver.models.user import User
-from ApiDrinkSaver.models.user_detail import UserModifiedBarPrice
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
