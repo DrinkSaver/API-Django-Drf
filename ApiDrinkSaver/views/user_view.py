@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthentic
 from django.shortcuts import get_object_or_404
 from ApiDrinkSaver.models.user import CustomUser
 from ApiDrinkSaver.serializers.user_serializer import CustomUserSerializer
-from ApiDrinkSaver.permissions import IsOwnerOrAdmin
+from ApiDrinkSaver.permissions import IsAdminOrReadOnly, IsO
 from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
 
