@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False,  cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
 ALLOWED_HOSTS = ['*']
@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "drf_yasg",
     "rest_framework",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
     "ApiDrinkSaver",
     "allauth",
     "allauth.account",
@@ -35,6 +37,9 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
+
+REST_USE_JWT = True
+REST_SESSION_LOGIN = False
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -84,12 +89,16 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -132,7 +141,6 @@ SWAGGER_SETTINGS = {
     },
     "PERSIST_AUTH": True,
 }
-
 
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {

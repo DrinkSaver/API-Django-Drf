@@ -1,4 +1,5 @@
 from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 from ApiDrinkSaver.views.user_view import (get_all_users, get_user_profile, get_user_by_id, update_user_profile,
                                            search_users, get_paginated_users, UserProfileViewSet,)
@@ -16,6 +17,6 @@ urlpatterns = [
     path('user/search/', search_users, name='search_users'),
     path('users/paginated/', get_paginated_users, name='get_paginated_users'),
     path('token/', obtain_auth_token, name='api_token_auth'),
-    path('auth/', include('rest_auth.urls')),
+    path('auth/', include('dj_rest_auth.urls')),
     path('', include(router.urls)),
 ]
