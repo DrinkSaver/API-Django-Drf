@@ -21,7 +21,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),  # URL de l'interface d'administration de Django
 
-    # URL de l'API - Vérifiez que le nom de l'application est correct ('ApiDrinkSaver.urls')
+    # URL de l'API
     path("api/", include('ApiDrinkSaver.urls')),
 
     # Définition des URL pour Swagger (avec vérification DEBUG)
