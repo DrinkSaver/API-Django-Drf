@@ -1,19 +1,19 @@
-from rest_framework import status
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
-from django.shortcuts import get_object_or_404
-from ApiDrinkSaver.models.user import CustomUser
-from ApiDrinkSaver.serializers.user_serializer import CustomUserSerializer
-from ApiDrinkSaver.permissions import IsAdminOrReadOnly, IsO
-from django.db.models import Q
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.viewsets import ModelViewSet
+from ApiDrinkSaver.models.user import CustomUser
+from ApiDrinkSaver.serializers.user_serializer import CustomUserSerializer, UserProfileSerializer
+from ApiDrinkSaver.permissions import IsOwnerOrAdmin
 
 
-# Vue pour obtenir la liste de tous les utilisateurs (réservée aux administrateurs)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
-def get_all_users():
+def get_all_users(request):
     """
     Cette vue permet à l'administrateur de récupérer la liste de tous les utilisateurs.
     """
@@ -22,7 +22,6 @@ def get_all_users():
     return Response(serializer.data)
 
 
-# Vue pour obtenir le profil de l'utilisateur connecté
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_profile(request):
@@ -34,20 +33,17 @@ def get_user_profile(request):
     return Response(serializer.data)
 
 
-# Vue pour obtenir le profil d'un utilisateur par son ID
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsOwnerOrAdmin])
-def get_user_by_id(user_id):
+def get_user_by_id(request, user_id):
     """
-    Cette vue permet à un utilisateur authentifié ou à un administrateur de récupérer le profil d'un utilisateur par
-    son ID.
+    Cette vue permet à un utilisateur authentifié ou à un administrateur de récupérer le profil d'un utilisateur par son ID.
     """
     user = get_object_or_404(CustomUser, id=user_id)
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)
 
 
-# Vue pour mettre à jour le profil de l'utilisateur connecté
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_user_profile(request):
@@ -62,7 +58,6 @@ def update_user_profile(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Vue pour rechercher d'autres utilisateurs par nom, prénom ou adresse e-mail
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_users(request):
@@ -80,7 +75,6 @@ def search_users(request):
         return Response([])
 
 
-# Vue pour obtenir une liste paginée de tous les utilisateurs (réservée aux administrateurs)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def get_paginated_users(request):
@@ -92,3 +86,9 @@ def get_paginated_users(request):
     paginated_users = paginator.paginate_queryset(users, request)
     serializer = CustomUserSerializer(paginated_users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserProfileViewSet(ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsOwnerOrAdmin]
