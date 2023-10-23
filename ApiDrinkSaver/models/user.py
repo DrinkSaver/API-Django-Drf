@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from allauth.socialaccount.models import SocialAccount
 
 
@@ -21,9 +21,10 @@ class CustomUserManager(BaseUserManager):
 
 
 # Créez un modèle utilisateur personnalisé en utilisant AbstractBaseUser
-class CustomUser(AbstractBaseUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Champs de base pour l'authentification
     email = models.EmailField(unique=True, verbose_name="Adresse e-mail")
+    password = models.CharField(max_length=128, verbose_name="Mot de passe")
 
     # Champs spécifiques à l'utilisateur
     first_name = models.CharField(max_length=30, verbose_name="Prénom")
@@ -36,7 +37,8 @@ class CustomUser(AbstractBaseUser):
 
     # Champs pour les informations de profil
     date_of_birth = models.DateField(null=True, blank=True, verbose_name="Date de naissance")
-    profile_image = models.ImageField(upload_to="profile_images/", null=True, blank=True, verbose_name="Photo de profil")
+    profile_image = models.ImageField(upload_to="profile_images/", null=True, blank=True,
+                                      verbose_name="Photo de profil")
     bio = models.TextField(max_length=500, blank=True, verbose_name="Biographie")
     location = models.CharField(max_length=100, blank=True, verbose_name="Emplacement")
 
@@ -44,6 +46,10 @@ class CustomUser(AbstractBaseUser):
     bar_name = models.CharField(max_length=100, verbose_name="Nom du bar")
     address = models.CharField(max_length=200, verbose_name="Adresse du bar")
 
+    # Champs spécifiques related_name personnalisés pour éviter les conflits
+    groups = models.ManyToManyField(Group, verbose_name="Groups", blank=True, related_name="custom_users")
+    user_permissions = models.ManyToManyField(Permission, verbose_name="User permissions", blank=True,
+                                              related_name="custom_users")
     # Champs pour les comptes de médias sociaux
     linked_social_accounts = models.ManyToManyField(SocialAccount, related_name="users", blank=True,
                                                     verbose_name="Comptes de médias sociaux liés")

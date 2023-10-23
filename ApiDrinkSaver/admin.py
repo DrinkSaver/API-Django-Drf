@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from ApiDrinkSaver.models.user import CustomUser
+from ApiDrinkSaver.models.user import CustomUser, UserProfile, BarOwnerProfile
 
 
 class CustomUserAdmin(UserAdmin):
@@ -14,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
         ('Personal Info', {'fields': ('first_name', 'last_name', 'date_of_birth', 'profile_image', 'bio', 'location')}),
         ('User Type', {'fields': ('is_staff', 'is_bar_owner', 'is_lambda_user')}),
         ('Bar Owner Info', {'fields': ('bar_name', 'address')}),
+        ('Permissions', {'fields': ('groups', 'user_permissions')}),
     )
 
     add_fieldsets = (
@@ -25,3 +26,5 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(UserProfile)
+admin.site.register(BarOwnerProfile)
