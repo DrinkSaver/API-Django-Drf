@@ -6,9 +6,56 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ModelViewSet
+from allauth.account.models import EmailConfirmation
+from allauth.account.utils import complete_signup
+from django.http import JsonResponse
+from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.providers.oauth2.client import OAuth2Error
+from django.utils.translation import gettext_lazy as _
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.core.mail import send_mail
+from allauth.account.models import EmailAddress
 from ApiDrinkSaver.models.user import CustomUser
 from ApiDrinkSaver.serializers.user_serializer import CustomUserSerializer, UserProfileSerializer
 from ApiDrinkSaver.permissions import IsOwnerOrAdmin
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def register_user(request):
+    """
+    Cette vue permet à un utilisateur lambda de s'inscrire par e-mail ou par des comptes de médias sociaux.
+    """
+    email = request.data.get("email")
+    password = request.data.get("password")
+
+    if email and password:
+        user, created = CustomUser.objects.get_or_create(email=email)
+        if created:
+            user.set_password(password)
+            user.save()
+            user.send_email_confirmation()
+            return JsonResponse({"detail": _("L'inscription a réussi. Un e-mail de confirmation a été envoyé.")})
+        return JsonResponse({"detail": _("Cet e-mail est déjà associé à un compte.")}, status=400)
+
+    social_provider = request.data.get("social_provider")
+    social_token = request.data.get("social_token")
+    if social_provider and social_token:
+        try:
+            account = SocialAccount.get_social_account(social_provider, social_token)
+            if account and account.user:
+                return JsonResponse({"detail": _("Cet utilisateur social existe déjà.")}, status=400)
+            user = CustomUser.objects.create(email=email)
+            account = SocialAccount(user=user, uid=social_token, provider=social_provider)
+            account.save()
+            complete_signup(request, user, EmailConfirmation.objects.filter(email=email).first())
+            return JsonResponse({"detail": _("L'inscription a réussi.")})
+        except OAuth2Error
+            return JsonResponse({"detail": _("Echec de l'inscription via le compte social.")}, status=400)
+
+    return JsonResponse({"detail": _("Données d'inscription invalides.")})
 
 
 @api_view(['GET'])

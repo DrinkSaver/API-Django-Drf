@@ -1,13 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
+from django.contrib.sites.models import Site
+from allauth.account.models import EmailAddress
+from allauth.account.utils import send_email_confirmation
 from allauth.socialaccount.models import SocialAccount
+from django.utils.translation import gettext_lazy as _
 
 
 # Créez un gestionnaire de modèle personnalisé pour le modèle CustomUser
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
-            raise ValueError("L'adresse e-mail doit être spécifiée")
+            raise ValueError(_("L'adresse e-mail doit être spécifiée"))
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -23,8 +27,9 @@ class CustomUserManager(BaseUserManager):
 # Créez un modèle utilisateur personnalisé en utilisant AbstractBaseUser
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Champs de base pour l'authentification
-    email = models.EmailField(unique=True, verbose_name="Adresse e-mail")
-    password = models.CharField(max_length=128, verbose_name="Mot de passe")
+    email = models.EmailField(unique=True, verbose_name=_("Adresse e-mail"))
+    email_verified = models.BooleanField(default=False, verbose_name=_("Adresse e-mail vérifiée"))
+    password = models.CharField(max_length=128, verbose_name=_("Mot de passe"))
 
     # Champs spécifiques à l'utilisateur
     first_name = models.CharField(max_length=30, verbose_name="Prénom")
@@ -53,6 +58,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # Champs pour les comptes de médias sociaux
     linked_social_accounts = models.ManyToManyField(SocialAccount, related_name="users", blank=True,
                                                     verbose_name="Comptes de médias sociaux liés")
+
+    def send_email_confirmation(self):
+        email_address, created = EmailAddress.objects.get_or_create(user=self, email=self.email, verified=False)
+        if created:
+            send_email_confirmation(self, email_address)
     # Utilisez un gestionnaire personnalisé
     objects = CustomUserManager()
 
@@ -61,8 +71,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = "Utilisateur personnalisé"
-        verbose_name_plural = "Utilisateurs personnalisés"
+        verbose_name = _("Utilisateur personnalisé")
+        verbose_name_plural = _("Utilisateurs personnalisés")
 
 
 # Créez un modèle pour le profil de l'utilisateur
