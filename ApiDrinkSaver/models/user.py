@@ -23,9 +23,7 @@ class CustomUserManager(BaseUserManager):
 # Créez un modèle utilisateur personnalisé en utilisant AbstractBaseUser
 class CustomUser(AbstractBaseUser):
     # Champs de base pour l'authentification
-    username = models.CharField(max_length=30, unique=True, verbose_name="Surnom")
     email = models.EmailField(unique=True, verbose_name="Adresse e-mail")
-    password = models.CharField(max_length=128, verbose_name="Mot de passe")
 
     # Champs spécifiques à l'utilisateur
     first_name = models.CharField(max_length=30, verbose_name="Prénom")
@@ -38,8 +36,7 @@ class CustomUser(AbstractBaseUser):
 
     # Champs pour les informations de profil
     date_of_birth = models.DateField(null=True, blank=True, verbose_name="Date de naissance")
-    profile_image = models.ImageField(upload_to="profile_images/", null=True, blank=True,
-                                      verbose_name="Photo de profil")
+    profile_image = models.ImageField(upload_to="profile_images/", null=True, blank=True, verbose_name="Photo de profil")
     bio = models.TextField(max_length=500, blank=True, verbose_name="Biographie")
     location = models.CharField(max_length=100, blank=True, verbose_name="Emplacement")
 
@@ -50,7 +47,6 @@ class CustomUser(AbstractBaseUser):
     # Champs pour les comptes de médias sociaux
     linked_social_accounts = models.ManyToManyField(SocialAccount, related_name="users", blank=True,
                                                     verbose_name="Comptes de médias sociaux liés")
-
     # Utilisez un gestionnaire personnalisé
     objects = CustomUserManager()
 
