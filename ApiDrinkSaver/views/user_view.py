@@ -58,6 +58,23 @@ def register_user(request):
     return JsonResponse({"detail": _("Données d'inscription invalides.")})
 
 
+@api_view(['POST'])
+def verify_email(request):
+    """
+    Cette vue permet à un utilisateur de confirmer son adresse e-mail en utilisant le code de confirmation reçu par e-mail.
+    """
+    email = request.data.get("email")
+    confirmation_code = request.data.get("confirmation_code")
+
+    if email and confirmation_code:
+        email_address = EmailAddress.objects.get(email=email)
+        if email_address and  email_address.confirmation_key == confirmation_code and not email_address.verified:
+            email_address.verified = True
+            email_address.save()
+            return JsonResponse({'detail': _("Adresse e-mail vérifiée avec succès.")})
+        return JsonResponse({"detail": _("Code de confirmation invalide ou adresse e-mail déjà vérifiée.")}, status=400)
+    return JsonResponse({"detail": _("Données invalides.")}, status=400)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def get_all_users(request):
