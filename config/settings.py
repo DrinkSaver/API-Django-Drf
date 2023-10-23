@@ -181,7 +181,7 @@ ACCOUNT_EMAIL_CONFIRMATION_TEMPLATE = 'templates/emails/confirmation_signup_mess
 ACCOUNT_PASSWORD_RESET_CONFIRM = 'templates/emails/password_reset_confirmation.txt'
 
 # Setup for password reset with `allauth'
-ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
+ACCOUNT_ADAPTER = "ApiDrinkSaver.adapter.CustomAccountAdapter"
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/account/confirmed-email/'
@@ -201,5 +201,7 @@ ACCOUNT_SESSION_REMEMBER = None
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1800
+ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
