@@ -52,7 +52,7 @@ def register_user(request):
             account.save()
             complete_signup(request, user, EmailConfirmation.objects.filter(email=email).first())
             return JsonResponse({"detail": _("L'inscription a réussi.")})
-        except OAuth2Error
+        except OAuth2Error:
             return JsonResponse({"detail": _("Echec de l'inscription via le compte social.")}, status=400)
 
     return JsonResponse({"detail": _("Données d'inscription invalides.")})
