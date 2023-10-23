@@ -1,8 +1,10 @@
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
-from ApiDrinkSaver.views.user_view import (get_all_users, get_user_profile, get_user_by_id, update_user_profile,
-                                           search_users, get_paginated_users, UserProfileViewSet,)
+from ApiDrinkSaver.views.user_view import (
+    get_all_users, get_user_profile, get_user_by_id, update_user_profile, search_users,
+    get_paginated_users, UserProfileViewSet, register_user, verify_email
+)
 from rest_framework.authtoken.views import obtain_auth_token
 
 # Utilisez DefaultRouter pour gérer les vues avec ModelViewSet
@@ -18,5 +20,7 @@ urlpatterns = [
     path('users/paginated/', get_paginated_users, name='get_paginated_users'),
     path('token/', obtain_auth_token, name='api_token_auth'),
     path('auth/', include('dj_rest_auth.urls')),
+    path('register/', register_user, name='register_user'),  # Ajoutez cette ligne
+    path('verify-email/', verify_email, name='verify_email'),  # Ajoutez cette ligne
     path('', include(router.urls)),
 ]
