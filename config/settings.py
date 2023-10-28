@@ -87,6 +87,7 @@ DATABASES = {
     "test": {
         "ENGINE": 'django.db.backends.mysql',
         "NAME": config('DB_TEST_NAME'),
+        "TEST_NAME": config('DB_TEST_NAME'),
         "USER": config('DB_TEST_USER'),
         "PASSWORD": config('DB_TEST_PASSWORD'),
         "HOST": config('DB_TEST_HOST'),
