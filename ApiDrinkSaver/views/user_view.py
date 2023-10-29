@@ -3,9 +3,10 @@ from django.db.models import Q
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.authtoken.views import obtain_auth_token
 from allauth.account.models import EmailConfirmation
 from allauth.account.utils import complete_signup
 from django.http import JsonResponse
@@ -75,6 +76,13 @@ def verify_email(request):
         return JsonResponse({"detail": _("Code de confirmation invalide ou adresse e-mail déjà vérifiée.")}, status=400)
     return JsonResponse({"detail": _("Données invalides.")}, status=400)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def user_login(request):
+    """
+    Cette vue permet à tout le monde de se connecter
+    """
+    return obtain_auth_token(request)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
