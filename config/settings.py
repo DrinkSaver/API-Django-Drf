@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
     "allauth.socialaccount.providers.google",
+    "corsheaders",
 ]
 
 SITE_ID = 1
@@ -50,15 +51,26 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
+# List of strings representing URLs allowed to access the API
+CORS_ALLOWED_ORIGINS = [
+
+]
+
+# List of regular patterns representing URLs allowed to access the API.
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https?://\w+\.example\.com$',
+]
 ROOT_URLCONF = "config.urls"
 
 # Configuration of templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

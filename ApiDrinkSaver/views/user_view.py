@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -76,6 +78,7 @@ def verify_email(request):
         return JsonResponse({"detail": _("Code de confirmation invalide ou adresse e-mail déjà vérifiée.")}, status=400)
     return JsonResponse({"detail": _("Données invalides.")}, status=400)
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def user_login(request):
@@ -83,6 +86,7 @@ def user_login(request):
     Cette vue permet à tout le monde de se connecter
     """
     return obtain_auth_token(request)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
@@ -92,7 +96,7 @@ def get_all_users(request):
     """
     users = CustomUser.objects.all()
     serializer = CustomUserSerializer(users, many=True)
-    return Response(serializer.data)
+    return render()
 
 
 @api_view(['GET'])

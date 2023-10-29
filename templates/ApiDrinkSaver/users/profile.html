@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profil</title>
+</head>
+<body>
+    <h1>Profil</h1>
+    <p>Nom : {{ user.last_name }}</p>
+    <p>Prénom : {{ user.first_name }}</p>
+    <p>Adresse e-mail : {{ user.email }}</p>
+    <p>Date de naissance : {{ user.date_of_birth }}</p>
+    <p>Biographie : {{ user.bio }}</p>
+    <p>Emplacement : {{ user.location }}</p>
+    <a href="{% url 'update_user_profile' %}">Modifier le profil</a>
+</body>
+</html>
