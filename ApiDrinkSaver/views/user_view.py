@@ -68,12 +68,13 @@ def verify_email(request):
 
     if email and confirmation_code:
         email_address = EmailAddress.objects.get(email=email)
-        if email_address and  email_address.confirmation_key == confirmation_code and not email_address.verified:
+        if email_address and email_address.confirmation_key == confirmation_code and not email_address.verified:
             email_address.verified = True
             email_address.save()
             return JsonResponse({'detail': _("Adresse e-mail vérifiée avec succès.")})
         return JsonResponse({"detail": _("Code de confirmation invalide ou adresse e-mail déjà vérifiée.")}, status=400)
     return JsonResponse({"detail": _("Données invalides.")}, status=400)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
