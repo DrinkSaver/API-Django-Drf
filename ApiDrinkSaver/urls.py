@@ -3,8 +3,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 from ApiDrinkSaver.views.user_view import (
     get_all_users, get_user_profile, get_user_by_id, update_user_profile, search_users,
-    get_paginated_users, UserProfileViewSet, register_user, verify_email, user_login
+    get_paginated_users, UserProfileViewSet, register_user, verify_email, user_login,
 )
+from ApiDrinkSaver.views.api_view import generate_api_key
 from rest_framework.authtoken.views import obtain_auth_token
 
 # Utilisez DefaultRouter pour gérer les vues avec ModelViewSet
@@ -24,4 +25,7 @@ urlpatterns = [
     path('verify-email/', verify_email, name='verify_email'),
     path('login/', user_login, name='user_login'),
     path('', include(router.urls)),
+
+    path('generate_api_key/', generate_api_key, name='generate_api_key'),
+
 ]

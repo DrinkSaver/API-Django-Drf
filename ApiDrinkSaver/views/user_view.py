@@ -96,7 +96,7 @@ def get_all_users(request):
     """
     users = CustomUser.objects.all()
     serializer = CustomUserSerializer(users, many=True)
-    return render()
+    return Response(serializer.data)
 
 
 @api_view(['GET'])

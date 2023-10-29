@@ -55,18 +55,9 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
 ]
 
-# List of strings representing URLs allowed to access the API
-CORS_ALLOWED_ORIGINS = [
-
-]
-
-# List of regular patterns representing URLs allowed to access the API.
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r'^https?://\w+\.example\.com$',
-]
 ROOT_URLCONF = "config.urls"
 
-# Configuration of templates
+# Configuration des templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -105,12 +96,12 @@ DATABASES = {
         "HOST": config('DB_TEST_HOST'),
         "PORT": config('DB_TEST_PORT'),
     }
-
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
 
@@ -230,3 +221,40 @@ ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
 ACCOUNT_SESSION_REMEMBER = None
 
+# CORS (Cross-Origin Resource Sharing) Settings
+
+# List of strings representing URLs allowed to access the API
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",  # Ajoutez ici les domaines autorisés pour l'accès CORS
+]
+
+# List of regular patterns representing URLs allowed to access the API.
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https?://\w+\.example\.com$',
+]
+
+# Authorization of cookies and identification information
+CORS_ALLOW_CREDENTIALS = True
+
+# List of allowed HTTP headers
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# List of allowed HTTP methods
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]

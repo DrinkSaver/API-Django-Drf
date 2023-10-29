@@ -1,6 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from ApiDrinkSaver.models.user import CustomUser, UserProfile, BarOwnerProfile
+from ApiDrinkSaver.models.apiKey import APIKey
+
+
+class APIKeyAdmin(admin.ModelAdmin):
+    list_display = ['user', 'name', 'key']
+    list_display_links = ['user', 'name', 'key']
+    search_fields = ['user__username', 'user__email', 'name']
+    list_filter = ['user']
+    ordering = ['-user']
+
+    def get_fields(self, request, obj=None):
+        fields = super(APIKeyAdmin, self).get_fields(request, obj)
+        if not request.user.is_superuser:
+            fields.remove('user')
+        return fields
 
 
 class CustomUserAdmin(UserAdmin):
@@ -25,6 +40,7 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
+admin.site.register(APIKey, APIKeyAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(UserProfile)
 admin.site.register(BarOwnerProfile)
