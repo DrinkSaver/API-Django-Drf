@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ApiDrinkSaver.models.user import CustomUser, UserProfile, BarOwnerProfile
+from ApiDrinkSaver.models.user import User, UserProfile, BarOwnerProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -19,5 +19,5 @@ class CustomUserSerializer(serializers.ModelSerializer):
     bar_owner = BarOwnerProfileSerializer()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = "__all__"

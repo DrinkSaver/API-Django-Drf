@@ -26,6 +26,6 @@ urlpatterns = [
     path('login/', user_login, name='user_login'),
     path('', include(router.urls)),
 
-    path('generate_api_key/', generate_api_key, name='generate_api_key'),
+    # path('generate_api_key/', generate_api_key, name='generate_api_key'),
 
 ]

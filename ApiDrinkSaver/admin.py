@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from ApiDrinkSaver.models.user import CustomUser, UserProfile, BarOwnerProfile
+from ApiDrinkSaver.models.user import User, UserProfile, BarOwnerProfile
 from ApiDrinkSaver.models.apiKey import APIKey
 
 
@@ -41,6 +41,6 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(APIKey, APIKeyAdmin)
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(User, CustomUserAdmin)
 admin.site.register(UserProfile)
 admin.site.register(BarOwnerProfile)

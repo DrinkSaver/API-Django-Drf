@@ -25,8 +25,9 @@ class CustomUserManager(BaseUserManager):
 
 
 # Créez un modèle utilisateur personnalisé en utilisant AbstractBaseUser
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     # Champs de base pour l'authentification
+    username = models.CharField(max_length=30, unique=True, verbose_name=_("Nom d'utilisateur"), default="")
     email = models.EmailField(unique=True, verbose_name=_("Adresse e-mail"))
     email_verified = models.BooleanField(default=False, verbose_name=_("Adresse e-mail vérifiée"))
     password = models.CharField(max_length=128, verbose_name=_("Mot de passe"))
@@ -59,10 +60,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     linked_social_accounts = models.ManyToManyField(SocialAccount, related_name="users", blank=True,
                                                     verbose_name="Comptes de médias sociaux liés")
 
-    def send_email_confirmation(self):
-        email_address, created = EmailAddress.objects.get_or_create(user=self, email=self.email, verified=False)
-        if created:
-            send_email_confirmation(self, email_address)
     # Utilisez un gestionnaire personnalisé
     objects = CustomUserManager()
 
@@ -74,10 +71,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _("Utilisateur personnalisé")
         verbose_name_plural = _("Utilisateurs personnalisés")
 
+    def send_email_confirmation(self):
+        email_address, created = EmailAddress.objects.get_or_create(user=self, email=self.email, verified=False)
+        if created:
+            send_email_confirmation(self, email_address)
+
 
 # Créez un modèle pour le profil de l'utilisateur
 class UserProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="profile",
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile",
                                 verbose_name="Utilisateur")
 
     # Ajoutez davantage de champs spécifiques au profil utilisateur
@@ -91,7 +93,7 @@ class UserProfile(models.Model):
 
 # Créez un modèle pour le profil du propriétaire de bar
 class BarOwnerProfile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="bar_owner",
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="bar_owner",
                                 verbose_name="Propriétaire de bar")
 
     # Ajoutez davantage de champs spécifiques au profil du propriétaire de bar

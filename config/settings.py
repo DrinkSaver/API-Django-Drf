@@ -101,7 +101,7 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ]
 }
 
@@ -149,7 +149,8 @@ SWAGGER_SETTINGS = {
             "type": "basic"
         }
     },
-    "PERSIST_AUTH": True,
+    "USE_SESSION_AUTH": False,
+    "JSON_EDITOR": True,
 }
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -194,16 +195,18 @@ ACCOUNT_PASSWORD_RESET_CONFIRM = 'templates/emails/password_reset_confirmation.t
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_ADAPTER = "ApiDrinkSaver.adapter.CustomAccountAdapter"
 
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/account/confirmed-email/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/account/confirmed-email/'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 1800
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+ACCOUNT_EMAIL_MODEL = 'ApiDrinkSaver.CustomEmailAddress'
 
 ACCOUNT_UNIQUE_EMAIL = True
 
+ACCOUNT_USER_MODEL = 'ApiDrinkSaver.CustomUser'
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 
@@ -211,7 +214,7 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
-LOGIN_URL = 'account_login'
+# LOGIN_URL = 'account_login'
 LOGOUT_URL = 'account_logout'
 
 ACCOUNT_USERNAME_MIN_LENGTH = 6
@@ -225,12 +228,15 @@ ACCOUNT_SESSION_REMEMBER = None
 
 # List of strings representing URLs allowed to access the API
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",  # Ajoutez ici les domaines autorisés pour l'accès CORS
+    # "http://127.0.0.1:8000",
+    # "http://127.0.0.1:5173",
 ]
+
+CORS_ALLOW_ALL_ORIGINS: True
 
 # List of regular patterns representing URLs allowed to access the API.
 CORS_ALLOWED_ORIGIN_REGEXES = [
-    r'^https?://\w+\.example\.com$',
+    # r'^https?://\w+\.example\.com$',
 ]
 
 # Authorization of cookies and identification information
