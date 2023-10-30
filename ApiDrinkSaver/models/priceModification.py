@@ -25,7 +25,7 @@ class PriceModification(models.Model):
     )
 
     bar = models.ForeignKey(
-        Bar,
+        'Bar',
         on_delete=models.CASCADE,
         verbose_name=_('bar')
     )

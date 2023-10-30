@@ -10,20 +10,33 @@ class UserLambda(AbstractUser):
         verbose_name=_('email'),
         help_text=_('Required. Your unique email address for authentication.')
     )
-    first_name = models.CharField(
-        max_length=30,
-        verbose_name=_('first name'),
-        help_text=_('Required. Your first name.')
+
+    username = models.CharField(
+        unique=True,
+        verbose_name=_('username'),
+        max_length=150,
+        help_text=_('Required. Your unique username for authentication.')
     )
-    last_name = models.CharField(
-        max_length=30,
-        verbose_name=_('last name'),
-        help_text=_('Required. Your last name.')
-    )
+
     password = models.CharField(
         max_length=128,
         verbose_name=_('password'),
         help_text=_('Required. Your password for authentication.')
+    )
+
+    first_name = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        verbose_name=_('first name'),
+        help_text=_('Optional. Your first name.')
+    )
+    last_name = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        verbose_name=_('last name'),
+        help_text=_('Optional. Your last name.')
     )
     date_of_birth = models.DateField(
         null=True,
@@ -46,7 +59,6 @@ class UserLambda(AbstractUser):
         help_text=_('Add your favorite drinks to the list.')
     )
 
-    # Historique des modifications de prix des boissons
     drink_price_modifications = models.ManyToManyField(
         'Drink',
         through='PriceModification',
