@@ -1,5 +1,3 @@
-# favorites/models.py
-
 from django.db import models
 from django.contrib.auth import get_user_model
 from ApiDrinkSaver.models.drink import Drink
@@ -8,45 +6,36 @@ from ApiDrinkSaver.models.bar import Bar
 UserLambda = get_user_model()
 
 
-class FavoriteDrink(models.Model):
+class FavoriteItem(models.Model):
+    ITEM_TYPES = (
+        ('drink', 'Drink'),
+        ('bar', 'Bar'),
+    )
+
     user = models.ForeignKey(
         UserLambda,
         on_delete=models.CASCADE
     )
 
-    drink = models.ForeignKey(
-        Drink,
-        on_delete=models.CASCADE
+    item_type = models.CharField(
+        choices=ITEM_TYPES,
+        max_length=5
     )
 
-    date_added = models.DateTimeField(
-        auto_now_add=True
+    item_id = models.PositiveIntegerField(
     )
 
-    class Meta:
-        unique_together = ('user', 'drink')
-
-    def __str__(self):
-        return f"{self.user.username}'s Favorite Drink"
-
-
-class FavoriteBar(models.Model):
-    user = models.ForeignKey(
-        UserLambda,
-        on_delete=models.CASCADE
-    )
-
-    bar = models.ForeignKey(
-        Bar,
-        on_delete=models.CASCADE
-    )
-
-    date_added = models.DateTimeField(
-        auto_now_add=True
+    type = models.CharField(
+        max_length=10,
+        choices=(
+            ('drink', 'Drink'),
+            ('bar', 'Bar')
+        )
     )
 
     class Meta:
-        unique_together = ('user', 'bar')
+        unique_together = ('user', 'item_type', 'item_id')
 
     def __str__(self):
-        return f"{self.user.username}'s Favorite Bar"
+        return f"{self.user.username}'s Favorite {self.item_type.capitalize()}"
+
