@@ -51,13 +51,6 @@ class UserLambda(AbstractUser):
         verbose_name=_('profile picture'),
         help_text=_('Optional. Upload your profile picture.')
     )
-    favorite_drinks = models.ManyToManyField(
-        'Drink',
-        related_name='favorite_by',
-        blank=True,
-        verbose_name=_('favorite drinks'),
-        help_text=_('Add your favorite drinks to the list.')
-    )
 
     drink_price_modifications = models.ManyToManyField(
         'Drink',

@@ -1,26 +1,19 @@
 from rest_framework import serializers
-from ApiDrinkSaver.models import UserLambda, PriceModification, Drink
 from django.contrib.auth.hashers import make_password
+from ApiDrinkSaver.models.userLambda import UserLambda
+from ApiDrinkSaver.models.priceModification import PriceModification
+from ApiDrinkSaver.models.drink import Drink
 
 
 class UserLambdaSerializer(serializers.ModelSerializer):
     """
     Serializer for UserLambda model.
     """
+
     class Meta:
         model = UserLambda
-        fields = (
-            'id',
-            'username',
-            'email',
-            'password',
-            'first_name',
-            'last_name',
-            'date_of_birth',
-            'profile_picture',
-            'favorite_drinks',
-            'drink_price_modifications',
-        )
+        fields = '__all__'
+
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -51,6 +44,22 @@ class UserLambdaSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             validated_data['password'] = make_password(validated_data['password'])
         return super(UserLambdaSerializer, self).update(instance, validated_data)
+
+    def get_favorite_drinks(self, obj):
+        """
+        Récupérer les boissons favorites de l'utilisateur.
+        """
+        favorite_drinks = obj.favorite_drinks.all()
+        return FavoriteDrinkSerializer(favorite_drinks, many=True).data
+
+    def delete_favorite_drink(self, obj, validated_data):
+        """
+        Supprimer une boisson des favoris de l'utilisateur.
+        """
+        drink_id = validated_data.get('drink_id')
+        favorite_drink = obj.favorite_drinks.filter(drink_id=drink_id).first()
+        if favorite_drink:
+            favorite_drink.delete()
 
 
 class UserLambdaPasswordUpdateSerializer(serializers.Serializer):

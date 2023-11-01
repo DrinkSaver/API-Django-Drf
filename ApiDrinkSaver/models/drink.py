@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from ApiDrinkSaver.models.userLambda import UserLambda
 from ApiDrinkSaver.models.categoryDrink import CategoryDrink
 
 
@@ -52,6 +53,14 @@ class Drink(models.Model):
         related_name='drinks',
         verbose_name=_('bars'),
         help_text=_('Select the bars where the drink is available and specify prices.')
+    )
+
+    favorite_by = models.ManyToManyField(
+        UserLambda,
+        related_name="favorite_drinks",
+        blank=True,
+        verbose_name=_('favorite_by'),
+        help_text=_('Favoris for the drink')
     )
 
     def __str__(self):

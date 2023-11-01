@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-from ApiDrinkSaver.models.drink import Drink  # Importez le modèle Drink défini précédemment
+from ApiDrinkSaver.models.userLambda import UserLambda
+from ApiDrinkSaver.models.drink import Drink
 from ApiDrinkSaver.models.barFilter import BarFilter
+
 
 class Bar(models.Model):
     owner = models.OneToOneField(
@@ -58,12 +60,6 @@ class Bar(models.Model):
         help_text=_('Upload images for the carousel.')
     )
 
-    description = models.TextField(
-        blank=True,
-        verbose_name=_('description'),
-        help_text=_('Optional. Description of the bar.')
-    )
-
     menu = models.ManyToManyField(
         Drink,
         through='DrinkPrice',
@@ -76,6 +72,14 @@ class Bar(models.Model):
         blank=True,
         verbose_name=_('filters'),
         help_text=_('Filters for the bar')
+    )
+
+    favorite_by = models.ManyToManyField(
+        UserLambda,
+        related_name="favorite_bars",
+        blank=True,
+        verbose_name=_('favorite_by'),
+        help_text=_('Favoris for the bar')
     )
 
     def __str__(self):
