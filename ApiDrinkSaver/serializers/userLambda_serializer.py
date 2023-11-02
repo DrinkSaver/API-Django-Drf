@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from ApiDrinkSaver.models.userLambda import UserLambda
 from ApiDrinkSaver.models.priceModification import PriceModification
 from ApiDrinkSaver.models.drink import Drink
@@ -17,6 +19,16 @@ class UserLambdaSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+    def validate_password(self, value):
+        """
+        Validate the password and hash it before saving.
+        """
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
+        return make_password(value)
 
     def create(self, validated_data):
         """
@@ -45,21 +57,14 @@ class UserLambdaSerializer(serializers.ModelSerializer):
             validated_data['password'] = make_password(validated_data['password'])
         return super(UserLambdaSerializer, self).update(instance, validated_data)
 
-    def get_favorite_drinks(self, obj):
+    def to_representation(self, instance):
         """
-        Récupérer les boissons favorites de l'utilisateur.
+        Serialize the UserLambda object.
         """
-        favorite_drinks = obj.favorite_drinks.all()
-        return FavoriteDrinkSerializer(favorite_drinks, many=True).data
-
-    def delete_favorite_drink(self, obj, validated_data):
-        """
-        Supprimer une boisson des favoris de l'utilisateur.
-        """
-        drink_id = validated_data.get('drink_id')
-        favorite_drink = obj.favorite_drinks.filter(drink_id=drink_id).first()
-        if favorite_drink:
-            favorite_drink.delete()
+        data = super(UserLambdaSerializer, self).to_representation(instance)
+        # Add any additional data or custom fields you want to include
+        data['custom_field'] = instance.custom_field
+        return data
 
 
 class UserLambdaPasswordUpdateSerializer(serializers.Serializer):
