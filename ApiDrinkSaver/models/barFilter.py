@@ -74,6 +74,12 @@ class BarFilter(models.Model):
         help_text=_('Does the bar broadcast sports events?')
     )
 
+    has_billiard = models.BooleanField(
+        default=False,
+        verbose_name=_('has billiard'),
+        help_text=_('Does the bar have a billiard table?')
+    )
+
     def __str__(self):
         return self.name
 
