@@ -9,6 +9,7 @@ class BarSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super(BarSerializer, self).to_representation(instance)
+        # Personnalisez la représentation si nécessaire
         return representation
 
     def create(self, validated_data):
@@ -19,9 +20,11 @@ class BarSerializer(serializers.ModelSerializer):
         user = request.user
 
         # Vérifiez si l'utilisateur est administrateur ou bar
-        if user.is_staff or user.is_bar:
-            bar = Bar.objects.create(**validated_data)
-            return bar
+        if not (user.is_staff or user.is_bar):
+            raise serializers.ValidationError("Vous n'avez pas l'autorisation de créer un bar.")
+
+        bar = Bar.objects.create(**validated_data)
+        return bar
 
     def update(self, instance, validated_data):
         """
@@ -31,11 +34,13 @@ class BarSerializer(serializers.ModelSerializer):
         user = request.user
 
         # Vérifiez si l'utilisateur est administrateur ou bar
-        if user.is_staff or user.is_bar:
-            for attr, value in validated_data.items():
-                setattr(instance, attr, value)
-            instance.save()
-            return instance
+        if not (user.is_staff or user.is_bar):
+            raise serializers.ValidationError("Vous n'avez pas l'autorisation de mettre à jour ce bar.")
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
     def delete(self, instance):
         """
@@ -45,5 +50,7 @@ class BarSerializer(serializers.ModelSerializer):
         user = request.user
 
         # Vérifiez si l'utilisateur est administrateur ou bar
-        if user.is_staff or user.is_bar:
-            instance.delete()
+        if not (user.is_staff or user.is_bar):
+            raise serializers.ValidationError("Vous n'avez pas l'autorisation de supprimer ce bar.")
+
+        instance.delete()

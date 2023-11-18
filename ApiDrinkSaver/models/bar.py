@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import User
 from ApiDrinkSaver.models.userLambda import UserLambda
 from ApiDrinkSaver.models.drink import Drink
 from ApiDrinkSaver.models.barFilter import BarFilter
@@ -8,7 +7,7 @@ from ApiDrinkSaver.models.barFilter import BarFilter
 
 class Bar(models.Model):
     owner = models.OneToOneField(
-        User,
+        UserLambda,
         on_delete=models.CASCADE,
         related_name='bar_owner',
         verbose_name=_('owner')

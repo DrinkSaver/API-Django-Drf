@@ -1,3 +1,4 @@
+# models/priceModification.py
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
@@ -58,6 +59,15 @@ class PriceModification(models.Model):
     is_approved = models.BooleanField(
         default=False,
         verbose_name=_('is approved')
+    )
+
+    # Nouveaux champs pour gérer les votes
+    votes = models.ManyToManyField(
+        UserLambda,
+        related_name='price_modification_votes',
+        blank=True,
+        verbose_name=_('votes'),
+        help_text=_('Users who voted for this price modification.')
     )
 
     def __str__(self):
