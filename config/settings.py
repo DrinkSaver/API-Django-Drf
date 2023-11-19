@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from decouple import config, Csv
+
 from datetime import timedelta
 
 # Definition of the basic configuration
@@ -86,16 +87,10 @@ DATABASES = {
         "PASSWORD": config('DB_PASSWORD'),
         "HOST": config('DB_HOST'),
         "PORT": config('DB_PORT'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     },
-    "test": {
-        "ENGINE": 'django.db.backends.mysql',
-        "NAME": config('DB_TEST_NAME'),
-        "TEST_NAME": config('DB_TEST_NAME'),
-        "USER": config('DB_TEST_USER'),
-        "PASSWORD": config('DB_TEST_PASSWORD'),
-        "HOST": config('DB_TEST_HOST'),
-        "PORT": config('DB_TEST_PORT'),
-    }
 }
 
 REST_FRAMEWORK = {

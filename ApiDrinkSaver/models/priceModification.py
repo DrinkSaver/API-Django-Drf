@@ -1,9 +1,9 @@
-# models/priceModification.py
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from ApiDrinkSaver.models.userLambda import UserLambda
 from ApiDrinkSaver.models.bar import Bar
+from ApiDrinkSaver.models.drink import Drink
 
 MODIFICATION_STATUS_CHOICES = (
     ('PENDING', 'Pending'),
@@ -20,13 +20,13 @@ class PriceModification(models.Model):
     )
 
     drink = models.ForeignKey(
-        'Drink',
+        Drink,
         on_delete=models.CASCADE,
         verbose_name=_('drink')
     )
 
     bar = models.ForeignKey(
-        'Bar',
+        Bar,
         on_delete=models.CASCADE,
         verbose_name=_('bar')
     )
@@ -59,15 +59,6 @@ class PriceModification(models.Model):
     is_approved = models.BooleanField(
         default=False,
         verbose_name=_('is approved')
-    )
-
-    # Nouveaux champs pour gérer les votes
-    votes = models.ManyToManyField(
-        UserLambda,
-        related_name='price_modification_votes',
-        blank=True,
-        verbose_name=_('votes'),
-        help_text=_('Users who voted for this price modification.')
     )
 
     def __str__(self):
