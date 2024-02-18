@@ -181,8 +181,8 @@ EMAIL_USE_TLS = True  # Utiliser TLS (si False, utilisez EMAIL_USE_SSL)
 EMAIL_USE_SSL = False  # Utiliser SSL (si True, utilisez 465 pour EMAIL_PORT)
 EMAIL_HOST_USER = config('EMAIl')  # Votre adresse e-mail d'envoi
 EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')  # Mot de passe de votre adresse e-mail d'envoi
-EMAIL_FROM = config('EMAIl')  # Adresse de l'expéditeur par défaut
-DEFAULT_FROM_EMAIL = config('EMAIl')  # Adresse de l'expéditeur par défaut
+EMAIL_FROM = config('EMAIL')  # Adresse de l'expéditeur par défaut
+DEFAULT_FROM_EMAIL = config('EMAIL')  # Adresse de l'expéditeur par défaut
 ACCOUNT_EMAIL_CONFIRMATION_TEMPLATE = 'templates/emails/confirmation_signup_message.txt'
 ACCOUNT_PASSWORD_RESET_CONFIRM = 'templates/emails/password_reset_confirmation.txt'
 
@@ -228,7 +228,7 @@ CORS_ALLOWED_ORIGINS = [
     # "
 ]
 
-CORS_ALLOW_ALL_ORIGINS: True
+CORS_ALLOW_ALL_ORIGINS = True
 
 # List of regular patterns representing URLs allowed to access the API.
 CORS_ALLOWED_ORIGIN_REGEXES = [
